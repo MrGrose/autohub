@@ -1,0 +1,27 @@
+{# Универсальные поля формы — стиль как у «Авто» #}
+{% if form.csrf_token is defined %}{{ form.csrf_token }}{% endif %}
+
+<div class="row g-4">
+  {% for field in form if field.name != 'csrf_token' %}
+  <div class="col-12{% if field.type == 'IntegerField' %} col-md-6{% endif %}">
+    {% if field.type == 'BooleanField' %}
+    <div class="form-check form-switch pt-1">
+      {{ field(class="form-check-input", role="switch") }}
+      {{ field.label(class="form-check-label") }}
+    </div>
+    {% else %}
+    {{ field.label(class="form-label") }}
+    {% if field.type in ['SelectField', 'QuerySelectField', 'QuerySelectMultipleField'] %}
+    {{ field(class="form-select" + (" is-invalid" if field.errors else "")) }}
+    {% elif field.type == 'TextAreaField' %}
+    {{ field(class="form-control car-admin-description" + (" is-invalid" if field.errors else "")) }}
+    {% else %}
+    {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+    {% endif %}
+    {% endif %}
+    {% for err in field.errors %}
+    <div class="invalid-feedback d-block">{{ err }}</div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>

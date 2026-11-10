@@ -1,0 +1,65 @@
+{% extends "sqladmin/layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/admin-car.css" />
+<div class="col-12">
+  <div class="card">
+    <div class="card-header d-flex align-items-center gap-3">
+      <a href="{{ url_for('admin:list', identity=model_view.identity) }}" class="btn btn-primary px-4">
+        К списку
+      </a>
+      <h3 class="card-title mb-0">Редактировать {{ model_view.name }}</h3>
+    </div>
+    <div class="card-body border-bottom py-4 px-4">
+      <form action="{{ model_view._build_url_for('admin:edit', request, obj) }}" method="POST"
+        enctype="multipart/form-data">
+        {% if error %}
+        <div class="alert alert-danger mb-4" role="alert">{{ error }}</div>
+        {% endif %}
+
+        <fieldset class="form-fieldset car-admin-form border-0 m-0">
+          {% include "sqladmin/_car_form_fields.html" %}
+        </fieldset>
+
+        <div class="car-admin-photos mt-4 pt-4 border-top">
+          <label class="form-label" for="photo_files">Добавить фото</label>
+          <input type="file" id="photo_files" name="photo_files" class="form-control" multiple
+            accept="image/jpeg,image/png,image/webp" />
+          <small class="text-muted d-block mt-2">
+            Несколько файлов: Ctrl+клик (Mac — Cmd) в окне выбора. Нажмите «Сохранить», чтобы загрузить.
+          </small>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+          <button type="submit" name="save" value="Save and continue editing" class="btn btn-primary px-4">
+            Сохранить
+          </button>
+        </div>
+      </form>
+
+      {% if obj.photos and obj.photos|length > 0 %}
+      <form method="post" action="/admin/car/{{ obj.id }}/delete-photos" class="mt-4 pt-4 border-top car-admin-photos"
+        onsubmit="return confirm('Удалить выбранные фото?');">
+        <input type="hidden" name="csrf_token" value="{{ request.session.get('admin_csrf_token', '') }}" />
+        <label class="form-label d-block mb-3">Загруженные фото</label>
+        <div class="d-flex flex-wrap gap-3 mb-3">
+          {% for path in obj.photos %}
+          <div class="border rounded-3 p-3 bg-light text-center" style="max-width: 200px;">
+            <div class="form-check mb-2 text-start">
+              <input class="form-check-input" type="checkbox" name="paths" value="{{ path }}"
+                id="photo_{{ loop.index }}" />
+              <label class="form-check-label" for="photo_{{ loop.index }}">Выбрать</label>
+            </div>
+            <img src="/media/{{ path }}" alt="Фото" class="img-thumbnail rounded"
+              style="max-width: 180px; max-height: 130px; object-fit: cover;" />
+          </div>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-outline-danger">
+          Удалить выбранные
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{# Поля формы: вертикальная сетка, крупные инпуты #}
+{% if form.csrf_token is defined %}{{ form.csrf_token }}{% endif %}
+
+<div class="row g-4">
+  <div class="col-12">
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Например: 2023 KIA Seltos 1.5 CVT") }}
+    {% for err in form.name.errors %}<div class="invalid-feedback d-block">{{ err }}</div>{% endfor %}
+  </div>
+
+  <div class="col-md-6">
+    {{ form.country.label(class="form-label") }}
+    {{ form.country(class="form-control" + (" is-invalid" if form.country.errors else "")) }}
+    <datalist id="country-suggest">
+      {% for code in model_view.country_suggestions %}
+      <option value="{{ code }}"></option>
+      {% endfor %}
+    </datalist>
+    <small class="text-muted d-block mt-1">Выберите из списка или введите страну вручную</small>
+    {% for err in form.country.errors %}<div class="invalid-feedback d-block">{{ err }}</div>{% endfor %}
+  </div>
+
+  <div class="col-md-6">
+    {{ form.price_rub.label(class="form-label") }}
+    {{ form.price_rub(class="form-control" + (" is-invalid" if form.price_rub.errors else ""), placeholder="2200000") }}
+    {% for err in form.price_rub.errors %}<div class="invalid-feedback d-block">{{ err }}</div>{% endfor %}
+  </div>
+
+  <div class="col-12">
+    {{ form.description.label(class="form-label") }}
+    {{ form.description(class="form-control car-admin-description" + (" is-invalid" if form.description.errors else ""), placeholder="Пробег, комплектация, двигатель…") }}
+    {% for err in form.description.errors %}<div class="invalid-feedback d-block">{{ err }}</div>{% endfor %}
+  </div>
+
+  <div class="col-12">
+    <div class="d-flex flex-wrap gap-4 pt-1">
+      <div class="form-check form-switch">
+        {{ form.featured(class="form-check-input", role="switch") }}
+        {{ form.featured.label(class="form-check-label") }}
+      </div>
+      <div class="form-check form-switch">
+        {{ form.is_active(class="form-check-input", role="switch") }}
+        {{ form.is_active.label(class="form-check-label") }}
+      </div>
+    </div>
+  </div>
+</div>

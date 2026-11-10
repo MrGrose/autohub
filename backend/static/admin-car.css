@@ -1,0 +1,55 @@
+/* Формы админки — крупные поля, вертикальная сетка (как у «Авто») */
+.car-admin-form.form-fieldset,
+.admin-form.form-fieldset {
+  padding: 1.25rem 2rem;
+  margin: 0;
+  border-radius: 0.5rem;
+}
+
+.car-admin-form .form-label,
+.admin-form .form-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: var(--tblr-body-color, #1e293b);
+}
+
+.car-admin-form .form-control,
+.car-admin-form .form-select,
+.admin-form .form-control,
+.admin-form .form-select {
+  font-size: 1rem;
+  padding: 0.65rem 0.9rem;
+  min-height: 3rem;
+  border-radius: 0.5rem;
+}
+
+.car-admin-form textarea.car-admin-description,
+.admin-form textarea.car-admin-description {
+  min-height: 10rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.car-admin-form .form-check-input,
+.admin-form .form-check-input {
+  width: 2.5rem;
+  height: 1.35rem;
+  cursor: pointer;
+}
+
+.car-admin-form .form-check-label,
+.admin-form .form-check-label {
+  font-size: 1rem;
+  padding-left: 0.35rem;
+  cursor: pointer;
+}
+
+.car-admin-photos .form-label {
+  font-weight: 600;
+}
+
+.car-admin-photos input[type="file"].form-control {
+  min-height: 3rem;
+  padding: 0.5rem 0.9rem;
+}

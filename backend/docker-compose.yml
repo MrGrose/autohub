@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-autohub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-autohub}
+      POSTGRES_DB: ${POSTGRES_DB:-autohub}
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-autohub} -d ${POSTGRES_DB:-autohub}",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-autohub}:${POSTGRES_PASSWORD:-autohub}@db:5432/${POSTGRES_DB:-autohub}
+      PUBLIC_MEDIA_URL: ${PUBLIC_MEDIA_URL:-http://127.0.0.1:8000/media}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./templates:/app/templates
+      - ./static:/app/static
+
+volumes:
+  pgdata:
